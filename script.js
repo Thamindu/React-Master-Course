@@ -31,7 +31,7 @@ console.log("Type of UID  : ", typeof uniqueId);
 
 let person = {
   name: "Thamindu",
-  age: "35",
+  age: "31",
 };
 
 console.log(person.name);
@@ -67,8 +67,14 @@ const myArray3 = [...myArray2, 6, 7, 8];
 console.log(myArray3);
 
 //DOM manipulation
-
+// localStorage.setItem("userName", "Thamindu");
 document.addEventListener("DOMContentLoaded", function () {
   const mainTitle = document.querySelector("#main-title");
   console.log(mainTitle);
+
+  const button = document.getElementById("button");
+
+  button.addEventListener("click", (ev) => {
+    mainTitle.textContent = "Changed title";
+  });
 });
