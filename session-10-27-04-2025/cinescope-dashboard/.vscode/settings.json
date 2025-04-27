@@ -1,0 +1,11 @@
+{
+    "c.Spell.words" : [
+        "mflix",
+        "oklab",
+        "Oklch",
+        "shadch",
+        "turbopack"
+    ],
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+}
