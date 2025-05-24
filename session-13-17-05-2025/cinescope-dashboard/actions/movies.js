@@ -1,3 +1,7 @@
+"use server";
+
+import { db } from "@/lib/db";
+
 //get All movies action
 export const getMovies = async () => {
   try {
@@ -25,3 +29,23 @@ export const getMovies = async () => {
     return undefined;
   }
 };
+
+// create movie action
+export const createMovie =async  (movie) => {
+  try {
+      const result = await db.collection("movies_new").insertOne(movie);
+
+      if (result.acknowledged) {
+        console.log('movie added successfully. ');
+        return {
+          success : true,
+          message : 'Movie added successfully.'
+        }
+      } else {
+        return undefined;
+      }
+  } catch (error) {
+    console.log("insert failed.");
+    
+  }
+}
