@@ -2,10 +2,11 @@
 
 import { db } from "@/lib/db";
 
-//get All movies action
+// get all movies action
 export const getMovies = async () => {
   try {
-    const response = await fetch("http:localhost:3000/api/v1/movies", {
+    // using fetch API to get movies from the server
+    const response = await fetch("http://localhost:3000/api/v1/movies", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -15,37 +16,36 @@ export const getMovies = async () => {
     });
 
     if (!response.ok) {
-      throw new Error("Network error");
+      throw new Error("Network response was not ok");
     }
 
     if (response.status === 200) {
       return await response.json();
     } else {
-      console.log("No movies found");
+      console.log("No movies found!");
       return undefined;
     }
   } catch (error) {
-    console.log("Error fetching movies : ", error);
+    console.log("Error fetching movies:", error);
     return undefined;
   }
 };
 
-// create movie action
-export const createMovie =async  (movie) => {
+// Create movie action
+export const createMovie = async (movie) => {
   try {
-      const result = await db.collection("movies_new").insertOne(movie);
+    const result = await db.collection("movies_n").insertOne(movie);
 
-      if (result.acknowledged) {
-        console.log('movie added successfully. ');
-        return {
-          success : true,
-          message : 'Movie added successfully.'
-        }
-      } else {
-        return undefined;
-      }
-  } catch (error) {
-    console.log("insert failed.");
-    
+    if (result.acknowledged) {
+      console.log(`A movie was inserted with the _id: ${result.insertedId}`);
+      return {
+        success: true,
+        message: "Movie created successfully!",
+      };
+    } else {
+      return undefined;
+    }
+  } catch {
+    console.log("Mongodb insert failed!");
   }
-}
+};
