@@ -1,6 +1,7 @@
 "use client";
-import { useRouter } from "next/navigation";
+
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -13,22 +14,37 @@ import { DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { createMovie } from "@/actions/movies";
+import { updateMovie } from "@/actions/movies";
 import { getAllYears } from "@/lib/utils";
 
-export function AddMovieForm({ onClose }) {
+export function UpdateMovieForm({ onClose, movie }) {
   const router = useRouter();
   const years = getAllYears();
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Controlled states
-  const [selectedYear, setSelectedYear] = useState("");
-  const [selectedGenres, setSelectedGenres] = useState("");
+  const [title, setTitle] =  useState(movie.title);
+
+  // TODO : replace with multi select
+  const [directors, setDirectors] =  useState(movie.directors[0] || '');
+  // TODO : replace with multi select
+  const [selectedYear, setSelectedYear] = useState(movie.year);
+  const [selectedGenres, setSelectedGenres] = useState(movie.genres[0] || '');
+  const [rating, setRating] =  useState(movie.imdb.rating);
+
+  const [runtime, setRuntime] =  useState(movie.runtime || 0);
+
+  const [overview, setOverview] =  useState(movie.plot || "");
+
+  const [poster, setPoster] =  useState(movie.poster);
+  const [backdrop, setBackdrop] =  useState(movie.backdrop ||'');
+  const [status, setStatus] =  useState(movie.status);
+
+
 
   const handleClose = () => {
     // Reset controlled fields
-    setSelectedYear(null);
+   // setSelectedYear(null);
     setSelectedGenres(null);
-    router.refresh();
     // Close the dialog
     onClose(false);
   };
@@ -36,43 +52,19 @@ export function AddMovieForm({ onClose }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const title = formData.get("title");
-    const year = formData.get("year");
-    const director = formData.get("director");
-    const genre = formData.get("genre");
-    const rating = formData.get("rating");
-    const runtime = formData.get("runtime");
-    const overview = formData.get("overview");
-    const poster = formData.get("poster");
-    const backdrop = formData.get("backdrop");
-    const movieStatus = formData.get("status");
-
-    console.log("Form Data", {
-      title,
-      year,
-      director,
-      genre,
-      rating,
-      runtime,
-      overview,
-      poster,
-      backdrop,
-      status: movieStatus,
-    });
-
     setIsSubmitting(true);
 
-    const response = await createMovie({
+    const response = await updateMovie(movie.id,{
       title,
-      year,
-      directors: [director],
-      genres: [genre],
+      year: selectedYear,
+      directors: [directors],
+      genres: [selectedGenres],
       imdb: { rating: Number(rating) },
       runtime,
       plot: overview,
       poster,
       backdrop,
-      status: movieStatus,
+      status,
       lastupdated: new Date().toISOString(),
     });
 
@@ -81,6 +73,7 @@ export function AddMovieForm({ onClose }) {
     if (response?.success) {
       console.log(response);
       handleClose();
+        router.refresh();
     }
   };
 
@@ -89,9 +82,9 @@ export function AddMovieForm({ onClose }) {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="title">Title</Label>
-          <Input id="title" name="title" placeholder="Movie title" required />
+          <Input id="title" name="title" placeholder="Movie title" value={title} onChange={(e) => setTitle(e.target.value)} required />
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2"> 
           <Label htmlFor="year">Year</Label>
 
           <Select
@@ -116,7 +109,7 @@ export function AddMovieForm({ onClose }) {
 
         <div className="space-y-2">
           <Label htmlFor="director">Director</Label>
-          <Input id="director" name="director" placeholder="Director name" />
+          <Input id="director" name="director" placeholder="Director name" value={directors} onChange={(e) => setDirectors(e.target.value)} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="genre">Genre</Label>
@@ -152,6 +145,8 @@ export function AddMovieForm({ onClose }) {
             step="0.1"
             placeholder="Rating (0.0 - 10.0)"
             required
+            onChange={(e) => setRating(e.target.value)}
+            value={rating}
           />
         </div>
         <div className="space-y-2">
@@ -163,6 +158,8 @@ export function AddMovieForm({ onClose }) {
             min="1"
             placeholder="Runtime in minutes"
             required
+            onChange={(e) => setRuntime(e.target.value)}
+            value={runtime}
           />
         </div>
       </div>
@@ -174,6 +171,8 @@ export function AddMovieForm({ onClose }) {
           name="overview"
           placeholder="Movie description"
           className="h-[100px]"
+          onChange={(e) => setOverview(e.target.value)}
+          value={overview}
         />
       </div>
 
@@ -185,6 +184,8 @@ export function AddMovieForm({ onClose }) {
             name="poster"
             placeholder="URL to poster image"
             required
+            onChange={(e) => setPoster(e.target.value)}
+            value={poster}
           />
         </div>
         <div className="space-y-2">
@@ -193,12 +194,14 @@ export function AddMovieForm({ onClose }) {
             id="backdrop"
             name="backdrop"
             placeholder="URL to backdrop image"
+           onChange={(e) => setBackdrop(e.target.value)}
+            value={backdrop}
           />
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="status">Status</Label>
-          <Select id="status" name="status" required>
+          <Select id="status" name="status" required onValueChange={setStatus} value={status}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select status" />
             </SelectTrigger>
@@ -222,7 +225,7 @@ export function AddMovieForm({ onClose }) {
           Cancel
         </Button>
         <Button type="submit" className="min-w-[102px]" disabled={isSubmitting}>
-          {isSubmitting ? "Adding..." : "Add Movie"}
+          {isSubmitting ? "Updating..." : "Update Movie"}
         </Button>
       </DialogFooter>
     </form>

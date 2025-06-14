@@ -4,10 +4,10 @@ import MovieTable from "./movie-table";
 export default async function MovieData() {
   try {
     const movies = await db.collection("movies_n").find({}).limit(50).toArray();
-
+console.log("movies", movies);
     if (movies.length > 0) {
       const refinedMovies = movies.map((movie, key) => ({
-        id: key + 1,
+        id: movie._id.toString(),
         title: movie.title,
         year: movie.year,
         plot: movie.plot,
@@ -16,8 +16,12 @@ export default async function MovieData() {
         poster: movie.poster,
         imdb: movie.imdb,
         runtime: movie.runtime,
-      }));
+        status: movie.status ,
+        directors : movie.directors,
 
+        }));
+
+console.log("refinedMovies", refinedMovies);
       return <MovieTable movies={refinedMovies} />;
     } else {
       throw new Error("No movies found in the database.");

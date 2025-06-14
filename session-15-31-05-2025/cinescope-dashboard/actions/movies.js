@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { ObjectId } from "mongodb";
 
 // get all movies action
 export const getMovies = async () => {
@@ -48,5 +49,58 @@ export const createMovie = async (movie) => {
     }
   } catch {
     console.log("Mongodb insert failed!");
+  }
+};
+
+
+// Update Movie action
+
+export const updateMovie = async (movieId, movieData) => {
+  try {
+    const result = await db.collection("movies_n").updateOne({_id : ObjectId.createFromHexString(movieId)}, {$set : movieData}, {upsert : true});
+    console.log(result);
+    
+    if (result.acknowledged) {
+      console.log(`A movie was update with the _id: ${result.insertedId}`);
+      return {
+        success: true,
+        message: "Movie updated successfully!",
+      };
+    } else {
+      return undefined;
+    }
+  } catch (error) {
+    console.error("MongoDB update failed:", error);
+    return {
+      success: false,
+      message: "MongoDB update failed",
+      error: error.message,
+    };
+  }
+};
+
+// Delete Movie action
+
+export const deleteMovie = async (movieId) => {
+  try {
+    const result = await db.collection("movies_n").deleteOne({_id : ObjectId.createFromHexString(movieId)});
+    console.log(result);
+    
+    if (result.acknowledged) {
+      console.log(`A movie was delete with the _id: ${result.insertedId}`);
+      return {
+        success: true,
+        message: "Movie delete successfully!",
+      };
+    } else {
+      return undefined;
+    }
+  } catch (error) {
+    console.error("MongoDB delete failed:", error);
+    return {
+      success: false,
+      message: "MongoDB delete failed",
+      error: error.message,
+    };
   }
 };
