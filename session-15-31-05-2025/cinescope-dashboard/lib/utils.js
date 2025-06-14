@@ -7,7 +7,7 @@ export function cn(...inputs) {
 
 // utility function to get the last 100 years
 export function getAllYears() {
-  return Array.from({ length: 100 }, (_, i) =>
+  return Array.from({ length: 50 }, (_, i) =>
     (new Date().getFullYear() - i).toString()
   );
 }
