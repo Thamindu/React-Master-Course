@@ -8,16 +8,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { createMovie } from "@/actions/movies";
+import { getAllYears } from "@/lib/utils";
 
 export function AddMovieForm({ onClose }) {
+  const years = getAllYears();
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   // Controlled states
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedGenres, setSelectedGenres] = useState("");
@@ -80,6 +81,8 @@ export function AddMovieForm({ onClose }) {
     }
   };
 
+  console.log(selectedYear, years);
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
@@ -89,6 +92,7 @@ export function AddMovieForm({ onClose }) {
         </div>
         <div className="space-y-2">
           <Label htmlFor="year">Year</Label>
+
           <Select
             id="year"
             name="year"
@@ -97,16 +101,15 @@ export function AddMovieForm({ onClose }) {
             required
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select Year" />
+              <SelectValue placeholder="Please select year" />
             </SelectTrigger>
             <SelectContent>
-	            <SelectItem value="2020">2020</SelectItem>
-	            <SelectItem value="2021">2021</SelectItem>
-	            <SelectItem value="2022">2022</SelectItem>
-	            <SelectItem value="2023">2023</SelectItem>
-	            <SelectItem value="2024">2024</SelectItem>
-	            <SelectItem value="2025">2025</SelectItem>
-	        </SelectContent>
+              {years.map((year) => (
+                <SelectItem key={year} value={year}>
+                  {year}
+                </SelectItem>
+              ))}
+            </SelectContent>
           </Select>
         </div>
 
@@ -119,9 +122,9 @@ export function AddMovieForm({ onClose }) {
           <Select
             id="genre"
             name="genre"
+            required
             onValueChange={setSelectedGenres}
             value={selectedGenres}
-            required
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Please select genre" />
@@ -130,6 +133,9 @@ export function AddMovieForm({ onClose }) {
               <SelectItem value="Action">Action</SelectItem>
               <SelectItem value="Adventure">Adventure</SelectItem>
               <SelectItem value="Sci-Fi">Sci-Fi</SelectItem>
+              <SelectItem value="Romance">Romance</SelectItem>
+              <SelectItem value="Comedy">Comedy</SelectItem>
+              <SelectItem value="Horror">Horror</SelectItem>
             </SelectContent>
           </Select>
         </div>

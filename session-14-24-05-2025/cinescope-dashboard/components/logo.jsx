@@ -15,5 +15,3 @@ export function Logo({ className = "h-8 w-8" }) {
     </svg>
   );
 }
-
-// This component renders an SVG logo.

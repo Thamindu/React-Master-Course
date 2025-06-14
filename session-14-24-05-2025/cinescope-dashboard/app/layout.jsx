@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "CineScope Movies Database",
+  title: "CineScope Movies Database - BO3",
   description: "Find your favorite movie ratings and recommendations",
 };
 

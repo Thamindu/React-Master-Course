@@ -1,38 +1,37 @@
-import { Button } from "@/components/ui/button";
-import { Play, Film } from "lucide-react";
+import React from "react";
+import { Button } from "../ui/button";
+import { Film, Play } from "lucide-react";
 
-// Hero Banner Section
 export default function HeroBanner() {
   return (
-    <section id="overview" className="relative overflow-hidden min-h-[70vh]">
-      <div className="absolute inset-0 z-0">
-        <div className="bg-linear-to-r absolute inset-0 z-10 from-black/80 via-black/60 to-black/80"></div>
-        <div className="absolute inset-0 bg-[url('/images/hero-1.jpg')] bg-cover bg-center opacity-60 dark:opacity-40"></div>
-      </div>
-      <div className="container relative z-20 px-4 py-40">
-        <h1 className="text-white text-6xl font-bold text-center mb-4">
-          Discover Amazing <br />
-          Movies
-        </h1>
-        <p className="text-white text-center text-lg mb-4">
-          Explore our collection of the best movies from around the world.
-        </p>
-        <div className="flex justify-center gap-x-4">
-          <Button
-            variant="default"
-            className="hover:scale-105 transition-transform duration-200"
-          >
-            <Play className="w-4 h-4 mr-1" />
-            Browse Movies
-          </Button>
-          <Button
-            variant="outline"
-            className="bg-black/40 border-white/40 text-white hover:bg-white/20
-           hover:text-white hover:shadow-md hover:scale-105 transition-all duration-200"
-          >
-            <Film className="w-4 h-4 mr-2" />
-            Latest Releases
-          </Button>
+    <section className="relative overflow-hidden min-h-[70vh]">
+      <div className="bg-linear-to-r absolute inset-0 z-10 from-black/70 via-black/50 to-black/70"></div>
+      <div className="absolute inset-0 z-0 bg-[url('/images/hero-1.jpg')] bg-cover bg-center opacity-60 dark:opacity-40"></div>
+
+      <div className="container relative z-20 px-4 py-32 md:py-40 lg:py-52">
+        <div className="flex flex-col items-center justify-center space-y-6 text-center">
+          <div className="max-w-3xl space-y-4">
+            <h1 className="text-4xl font-bold tracking-tighter text-white drop-shadow-md sm:text-5xl md:text-6xl lg:text-7xl">
+              Discover Amazing Movies
+            </h1>
+            <p className="mx-auto max-w-[700px] text-lg text-white/80 drop-shadow-sm md:text-xl">
+              Explore our collection of the best movies from around the world.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Button size="lg" className="bg-primary hover:bg-primary/90 gap-2">
+              <Play className="h-4 w-4" />
+              Browse Movies
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="bg-primary/10 backdrop-blur-xs border-primary/30 hover:bg-primary/20 text-white hover:text-white"
+            >
+              Latest Releases
+              <Film className="h-8 w-8 text-white/30 dark:text-white/20" />
+            </Button>
+          </div>
         </div>
       </div>
     </section>
