@@ -36,7 +36,7 @@ export const getMovies = async () => {
 
 export const createMovie = async (movie) => {
   try {
-    const result = await db.collection("movies_n").insertOne(movie);
+    const result = await db.collection("movies").insertOne(movie);
 
     if (result.acknowledged) {
       console.log(`A movie was inserted with the _id: ${result.insertedId}`);
@@ -57,7 +57,7 @@ export const createMovie = async (movie) => {
 
 export const updateMovie = async (movieId, movieData) => {
   try {
-    const result = await db.collection("movies_n").updateOne({_id : ObjectId.createFromHexString(movieId)}, {$set : movieData}, {upsert : true});
+    const result = await db.collection("movies").updateOne({_id : ObjectId.createFromHexString(movieId)}, {$set : movieData}, {upsert : true});
     console.log(result);
     
     if (result.acknowledged) {
@@ -83,7 +83,7 @@ export const updateMovie = async (movieId, movieData) => {
 
 export const deleteMovie = async (movieId) => {
   try {
-    const result = await db.collection("movies_n").deleteOne({_id : ObjectId.createFromHexString(movieId)});
+    const result = await db.collection("movies").deleteOne({_id : ObjectId.createFromHexString(movieId)});
     console.log(result);
     
     if (result.acknowledged) {
@@ -100,6 +100,32 @@ export const deleteMovie = async (movieId) => {
     return {
       success: false,
       message: "MongoDB delete failed",
+      error: error.message,
+    };
+  }
+};
+
+export const getMovieById = async (id) => {
+  try {
+    const result = await db.collection("movies").findOne({_id : ObjectId.createFromHexString(id)});
+    
+    if (result && Object.keys(result).length) {
+      // console.log(`A movie found with the _id: ${result._id}`);
+      return {
+        success: true,
+        message: "Movie fetched successfully!",
+        data : result
+      };
+    } else {
+      console.log("786");
+      
+      return undefined;
+    }
+  } catch (error) {
+    // console.error("MongoDB fetched failed:", error);
+    return {
+      success: false,
+      message: "MongoDB fetched failed",
       error: error.message,
     };
   }
