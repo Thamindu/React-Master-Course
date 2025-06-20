@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import Image from "next/image";
 import { MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -25,20 +26,23 @@ import {
 import UpdateMovieDialog from "./update-movie-dialog";
 import DeleteMovieDialog from "./delete-movie-dialog";
 import { deleteMovie } from "@/actions/movies";
+// import { MOVIES } from "@/lib/data";
 
 export default function MovieTable({ movies }) {
-    const router = useRouter();
-  const [selectedMovie, setSelectedMovie] = useState(false);
+  const router = useRouter();
+  const [selectedMovie, setSelectedMovie] = useState(null);
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
   const toggleUpdateDialog = (open) => {
-    // Using requestAnimationFrame to ensure the dialog opens after the state update 
-      requestAnimationFrame(()=>setShowUpdateDialog(open) || !showUpdateDialog);
-  }
-    const toggleDeleteDialog = (open) => {
-    // Using requestAnimationFrame to ensure the dialog opens after the state update 
-      requestAnimationFrame(()=>setShowDeleteDialog(open) || !showDeleteDialog);
-  }
+    // Using requestAnimationFrame to ensure the dialog opens after the state update
+    requestAnimationFrame(() => setShowUpdateDialog(open || !showUpdateDialog));
+  };
+
+  const toggleDeleteDialog = (open) => {
+    // Using requestAnimationFrame to ensure the dialog opens after the state update
+    requestAnimationFrame(() => setShowDeleteDialog(open || !showDeleteDialog));
+  };
 
   const handleDeleteMovie = async (movieId) => {
     const resp = await deleteMovie(movieId);
@@ -48,18 +52,20 @@ export default function MovieTable({ movies }) {
       router.refresh();
     }
   };
-  const getMovieStatusClass = (status) => {
-    switch(status) {
-      case "published" : 
-      return "bg-green-100 text-green-100";
-      case "draft" :
-      return "bg-yellow-100 text-yellow-100";
-      case "archived" :
-      return "bg-red-100 text-red-100";
-      default :
-      return "bg-gray-100 text-gray-100";
+
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "published":
+        return "bg-green-100 text-green-800";
+      case "draft":
+        return "bg-yellow-100 text-yellow-800";
+      case "archived":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
-  }
+  };
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -70,7 +76,7 @@ export default function MovieTable({ movies }) {
             <TableHead>Title</TableHead>
             <TableHead>Year</TableHead>
             <TableHead>Genre</TableHead>
-            <TableHead>Rating</TableHead>
+            <TableHead className="text-center">Rating</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
@@ -94,17 +100,19 @@ export default function MovieTable({ movies }) {
               <TableCell>{movie.year}</TableCell>
               <TableCell>
                 <div className="flex flex-wrap gap-1">
-                  {movie.genres.map((genre) => (
+                  {(movie.genres || []).map((genre) => (
                     <Badge key={genre} variant="outline" className="text-xs">
                       {genre}
                     </Badge>
                   ))}
                 </div>
               </TableCell>
-              <TableCell>{movie.imdb.rating}</TableCell>
+              <TableCell className="text-center">
+                {Number(movie?.imdb?.rating).toFixed(1)}
+              </TableCell>
               <TableCell className="capitalize">
-                <Badge className={getMovieStatusClass(movie.status)}>
-                  <span className="text-black">{movie.status}</span>
+                <Badge className={getStatusClass(movie.status)}>
+                  {movie.status}
                 </Badge>
               </TableCell>
               <TableCell className="text-right">
@@ -119,15 +127,22 @@ export default function MovieTable({ movies }) {
                     <DropdownMenuLabel>Movie Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>View Details</DropdownMenuItem>
-                    <DropdownMenuItem onClick={()=>{
-                      setSelectedMovie(movie);
-                      toggleUpdateDialog(true);
-                    }}>Edit</DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setSelectedMovie(movie);
+                        toggleUpdateDialog(true);
+                      }}
+                    >
+                      Edit
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="text-destructive"  onClick={()=>{
-                      setSelectedMovie(movie);
-                      toggleDeleteDialog(true);
-                    }}>
+                    <DropdownMenuItem
+                      className="text-destructive"
+                      onClick={() => {
+                        setSelectedMovie(movie);
+                        toggleDeleteDialog(true);
+                      }}
+                    >
                       Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -137,8 +152,14 @@ export default function MovieTable({ movies }) {
           ))}
         </TableBody>
       </Table>
-      <UpdateMovieDialog open={showUpdateDialog} onOpenChange={setShowUpdateDialog} movie={selectedMovie}/>
-     <DeleteMovieDialog
+
+      <UpdateMovieDialog
+        open={showUpdateDialog}
+        onOpenChange={toggleUpdateDialog}
+        movie={selectedMovie}
+      />
+
+      <DeleteMovieDialog
         open={showDeleteDialog}
         onOpenChange={toggleDeleteDialog}
         onConfirm={handleDeleteMovie}
