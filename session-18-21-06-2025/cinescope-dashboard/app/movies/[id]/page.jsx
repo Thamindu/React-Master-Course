@@ -21,7 +21,7 @@ export async function generateMetadata(props) {
 export default async function MovieDetailsPage(props) {
   const { id } = await props.params;
   // simulate delay fo display movie information 
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  // await new Promise((resolve) => setTimeout(resolve, 2000));
 
   // const searchParams = await props.searchParams;
   const movie = await getMovieById(id);
