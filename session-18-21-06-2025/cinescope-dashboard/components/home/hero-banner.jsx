@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "../ui/button";
 import { Film, Play } from "lucide-react";
 
-export default function HeroBanner() {
+export default function HeroBanner({title = '', description = ''}) {
   return (
     <section className="relative overflow-hidden min-h-[70vh]">
       <div className="bg-linear-to-r absolute inset-0 z-10 from-black/70 via-black/50 to-black/70"></div>
@@ -12,10 +12,10 @@ export default function HeroBanner() {
         <div className="flex flex-col items-center justify-center space-y-6 text-center">
           <div className="max-w-3xl space-y-4">
             <h1 className="text-4xl font-bold tracking-tighter text-white drop-shadow-md sm:text-5xl md:text-6xl lg:text-7xl">
-              Discover Amazing Movies
+              {title}
             </h1>
             <p className="mx-auto max-w-[700px] text-lg text-white/80 drop-shadow-sm md:text-xl">
-              Explore our collection of the best movies from around the world.
+              {description}
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">

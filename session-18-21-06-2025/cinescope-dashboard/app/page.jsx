@@ -9,7 +9,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <HeaderNav />
       <main className="flex-1">
-        <HeroBanner />
+        <HeroBanner title="Discover Amazing Movies" description="Explore our collection of the best movies from around the world."/>
         <FeaturedMovies />
       </main>
       <Footer />

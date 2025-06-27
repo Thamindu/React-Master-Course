@@ -1,6 +1,7 @@
+import NextTopLoader from 'nextjs-toploader';
 import { inter } from "./fonts";
 import "./globals.css";
-inter
+
 
 
 export const metadata = {
@@ -14,6 +15,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${inter.className} antialiased`}
       >
+         <NextTopLoader speed={400} color='#28e6b3' crawlSpeed={400} />
         {children}
       </body>
     </html>
