@@ -15,6 +15,9 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { EMAIL_REGEX } from "@/lib/constants";
 import { signUp } from "@/lib/auth-client";
+import { redirect } from 'next/navigation';
+import { toast } from "sonner";
+import { signInUser } from "@/lib/utils";
 
 const DEFAULT_ERROR = {
   error: false,
@@ -78,12 +81,30 @@ export function SignUpForm({ className, ...props }) {
             console.log("onRequest", ctx);
           },
           onSuccess: () => {
-            // redirect to login
+            // redirect to dashboard on success 
+            signInUser(email, password, {
+              onSuccess: () => {
+                toast.success("Welcome aboard!", {
+                  description: "Your account has been created. Logging you in...",
+                  duration: 2500,
+                });
+                  setTimeout(()=>{
+      
+                    redirect("/admin");
+                  },1500)
+              },
+              onError: (error) => {
+                  toast.error("Error occurred!", {
+                    description: ctx.error.message,
+                    duration:2000
+                  });
+              },
+            });
           },
           onError: (ctx) => {
-            setError({
-              error: true,
-              message: ctx.error.message,
+            toast.error("Error occurred!", {
+              description: ctx.error.message,
+              duration:2000
             });
             // loading false
           },

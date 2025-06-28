@@ -16,7 +16,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signIn } from "@/lib/auth-client";
 import { EMAIL_REGEX } from "@/lib/constants";
-import { toast } from "sonner"
+import { toast } from "sonner";
+import { signInUser } from "@/lib/utils";
+
 const DEFAULT_ERROR = {
   error: false,
   message: "",
@@ -59,33 +61,26 @@ export function LoginForm() {
     const password = formData.get("password");
 
     if (validateForm({ email, password })) {
-      await signIn.email(
-        { email, password },
-        {
+        signInUser(email, password, {
           onSuccess: () => {
             setLoading(false);
-            toast.success("Welcome back!", {
-              description: "You're being redirected to your dashboard. Hang tight!",
-              duration:1500
-            });
-            setTimeout(()=>{
+              toast.success("Welcome back!", {
+                description: "You're being redirected to your dashboard. Hang tight!",
+                duration:1500
+              });
+              setTimeout(()=>{
 
-              redirect("/admin");
-            },1500)
+                redirect("/admin");
+              },1500)
           },
-          onError: (ctx) => {
-            // setError({
-            //   error: true,
-            //   message: ctx.error.message,
-            // });
-             toast.error("Error occurred!", {
-              description: ctx.error.message,
-              duration:2000
-            });
-            setLoading(false);
+          onError: (error) => {
+              toast.error("Error occurred!", {
+                description: ctx.error.message,
+                duration:2000
+              });
+              setLoading(false);
           },
-        }
-      );
+        });
     }
   };
 
