@@ -1,6 +1,7 @@
 import NextTopLoader from 'nextjs-toploader';
 import { inter } from "./fonts";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner"
 
 
 
@@ -17,6 +18,7 @@ export default function RootLayout({ children }) {
       >
          <NextTopLoader speed={400} color='#28e6b3' crawlSpeed={400} />
         {children}
+        <Toaster  richColors position="top-center" />
       </body>
     </html>
   );

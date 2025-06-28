@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signIn } from "@/lib/auth-client";
 import { EMAIL_REGEX } from "@/lib/constants";
-
+import { toast } from "sonner"
 const DEFAULT_ERROR = {
   error: false,
   message: "",
@@ -64,12 +64,23 @@ export function LoginForm() {
         {
           onSuccess: () => {
             setLoading(false);
-            redirect("/admin");
+            toast.success("Welcome back!", {
+              description: "You're being redirected to your dashboard. Hang tight!",
+              duration:1500
+            });
+            setTimeout(()=>{
+
+              redirect("/admin");
+            },1500)
           },
           onError: (ctx) => {
-            setError({
-              error: true,
-              message: ctx.error.message,
+            // setError({
+            //   error: true,
+            //   message: ctx.error.message,
+            // });
+             toast.error("Error occurred!", {
+              description: ctx.error.message,
+              duration:2000
             });
             setLoading(false);
           },

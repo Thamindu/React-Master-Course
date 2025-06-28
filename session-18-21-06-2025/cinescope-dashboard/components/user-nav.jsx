@@ -14,11 +14,18 @@ import { Button, } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { signOut } from '@/lib/auth-client';
 import { redirect } from 'next/navigation';
+import { toast } from "sonner"
 
 export default function UserNav() {
     const handleLogout = async () => {
         await signOut({fetchOptions : {
-            onSuccess : () => redirect('/login')
+            onSuccess : () => {
+              toast.success("Logged out successfully", {
+                description: "Come back soon!",
+                duration:2000
+              });
+              redirect('/login')
+            }
         }})
     }
   return (
